@@ -4,6 +4,8 @@
 package me.peerko.forgegriefprotection;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -294,6 +296,7 @@ public abstract class ProtBase {
 				player.worldObj.getWorld().getBlockAt(x, y, z),
 				(org.bukkit.entity.Player)player.getBukkitEntity()
 			);
+		
 		MinecraftServer.getServer().server.getPluginManager().callEvent(event);
 		if (event.isCancelled())
 			return false;
