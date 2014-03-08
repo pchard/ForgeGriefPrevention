@@ -16,8 +16,8 @@ import me.peerko.forgegriefprotection.mods.ComputerCraft;
 import me.peerko.forgegriefprotection.mods.IndustrialCraft;
 import me.peerko.forgegriefprotection.mods.ModularPowersuits;
 import me.peerko.forgegriefprotection.mods.PortalGun;
-import me.peerko.forgegriefprotection.mods.ThaumCraft;
-import me.peerko.forgegriefprotection.mods.ThaumicTinkerer;
+//import me.peerko.forgegriefprotection.mods.ThaumCraft;
+//import me.peerko.forgegriefprotection.mods.ThaumicTinkerer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -49,17 +49,17 @@ public class ProtectionEvents implements ITickHandler {
     public ProtectionEvents() {
         ProtectionEvents.entityProtections.addAll(Arrays.asList(new ProtBase[] {
                 //Creeper.instance, Mobs.instance, TNT.instance,
-                ThaumCraft.instance, PortalGun.instance,
+                //ThaumCraft.instance, PortalGun.instance,
                 IndustrialCraft.instance, ModularPowersuits.instance
                 /*, ArsMagica.instance, SteveCarts.instance,
                 RailCraft.instance, TrainCraft.instance, Mekanism.instance,
                 */ }));
         ProtectionEvents.tileProtections.addAll(Arrays.asList(new ProtBase[] {
                 BuildCraft.instance, ComputerCraft.instance, //RedPower.instance,
-                ThaumCraft.instance }));
+                /*ThaumCraft.instance*/ }));
         ProtectionEvents.toolProtections.addAll(Arrays.asList(new ProtBase[] {
                 BuildCraft.instance, ComputerCraft.instance, //RedPower.instance, ArsMagica.instance, 
-                ThaumCraft.instance, ThaumicTinkerer.instance }));
+                /*ThaumCraft.instance, ThaumicTinkerer.instance*/ }));
     }
 
     /*

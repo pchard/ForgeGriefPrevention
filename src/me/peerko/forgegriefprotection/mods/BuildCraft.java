@@ -91,6 +91,8 @@ public class BuildCraft extends ProtBase {
             box = fBoxB.get(e);
         }
 
+        if(fBoxInit == null)
+            return 1;
         boolean init = fBoxInit.getBoolean(box);
         if (!init) {
             return 1;
