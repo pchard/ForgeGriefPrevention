@@ -258,7 +258,7 @@ public class IndustrialCraft extends ProtBase {
 	    }
 
 	    //DEBUG:
-	    Logger.getLogger("Minecraft").log(Level.INFO, "class: " + fTntOwner.get(e));
+	    //Logger.getLogger("Minecraft").log(Level.INFO, "class: " + fTntOwner.get(e));
 
 
 	    radius = radius + 2; // 2 for safety
@@ -293,7 +293,7 @@ public class IndustrialCraft extends ProtBase {
 		for(int x = -radius; x < radius; x++){
 		    for(int y = -radius; y < radius; y++) {
 			for(int z = -radius; z < radius; z++) {
-			    if(canBuild(ply, x, y, z)) {
+			    if(!canBuild(ply, x + (int)e.posX, y + (int)e.posY, z + (int)e.posZ)) {
 				canBlow = false;
 				break out;
 			    }
