@@ -13,9 +13,11 @@ import java.util.logging.Logger;
 import me.peerko.forgegriefprotection.ProtBase;
 import me.peerko.forgegriefprotection.mods.BuildCraft;
 import me.peerko.forgegriefprotection.mods.ComputerCraft;
+import me.peerko.forgegriefprotection.mods.ExtraUtilities;
 import me.peerko.forgegriefprotection.mods.IndustrialCraft;
 import me.peerko.forgegriefprotection.mods.ModularPowersuits;
 import me.peerko.forgegriefprotection.mods.PortalGun;
+import me.peerko.forgegriefprotection.mods.RotaryCraft;
 //import me.peerko.forgegriefprotection.mods.ThaumCraft;
 //import me.peerko.forgegriefprotection.mods.ThaumicTinkerer;
 import net.minecraft.block.Block;
@@ -26,7 +28,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 
@@ -50,12 +51,12 @@ public class ProtectionEvents implements ITickHandler {
         ProtectionEvents.entityProtections.addAll(Arrays.asList(new ProtBase[] {
                 //Creeper.instance, Mobs.instance, TNT.instance,
                 //ThaumCraft.instance, PortalGun.instance,
-                IndustrialCraft.instance, ModularPowersuits.instance
+                IndustrialCraft.instance, ModularPowersuits.instance, RotaryCraft.instance
                 /*, ArsMagica.instance, SteveCarts.instance,
                 RailCraft.instance, TrainCraft.instance, Mekanism.instance,
                 */ }));
         ProtectionEvents.tileProtections.addAll(Arrays.asList(new ProtBase[] {
-                BuildCraft.instance, ComputerCraft.instance, //RedPower.instance,
+                BuildCraft.instance, ComputerCraft.instance, ExtraUtilities.instance, RotaryCraft.instance //RedPower.instance,
                 /*ThaumCraft.instance*/ }));
         ProtectionEvents.toolProtections.addAll(Arrays.asList(new ProtBase[] {
                 BuildCraft.instance, ComputerCraft.instance, //RedPower.instance, ArsMagica.instance, 
