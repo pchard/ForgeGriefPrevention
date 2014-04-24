@@ -18,6 +18,7 @@ import me.peerko.forgegriefprotection.mods.IndustrialCraft;
 import me.peerko.forgegriefprotection.mods.ModularPowersuits;
 import me.peerko.forgegriefprotection.mods.PortalGun;
 import me.peerko.forgegriefprotection.mods.RotaryCraft;
+import me.peerko.forgegriefprotection.mods.TinkererConstruct;
 //import me.peerko.forgegriefprotection.mods.ThaumCraft;
 //import me.peerko.forgegriefprotection.mods.ThaumicTinkerer;
 import net.minecraft.block.Block;
@@ -28,6 +29,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 
@@ -38,6 +40,8 @@ public class ProtectionEvents implements ITickHandler {
 
     public static ProtectionEvents instance = new ProtectionEvents();
 
+    
+    
     //public Resident lastOwner = null;
     public boolean enabled = true;
     public ArrayList<Entity> toRemove = new ArrayList<Entity>();
@@ -59,7 +63,7 @@ public class ProtectionEvents implements ITickHandler {
                 BuildCraft.instance, ComputerCraft.instance, ExtraUtilities.instance, RotaryCraft.instance //RedPower.instance,
                 /*ThaumCraft.instance*/ }));
         ProtectionEvents.toolProtections.addAll(Arrays.asList(new ProtBase[] {
-                BuildCraft.instance, ComputerCraft.instance, //RedPower.instance, ArsMagica.instance, 
+                BuildCraft.instance, ComputerCraft.instance, TinkererConstruct.instance,//RedPower.instance, ArsMagica.instance, 
                 /*ThaumCraft.instance, ThaumicTinkerer.instance*/ }));
     }
 
@@ -91,7 +95,7 @@ public class ProtectionEvents implements ITickHandler {
         toolProtections.add(protection);
     }
 
-    public boolean itemUsed(EntityPlayer player) {
+    public boolean itemUsed(EntityPlayer player, PlayerInteractEvent ev) {
         try {
             boolean kill = false;
 
@@ -119,7 +123,7 @@ public class ProtectionEvents implements ITickHandler {
             for (ProtBase prot : toolProtections) {
                 if (prot.enabled && prot.isEntityInstance(tool)) {
                     //lastCheck = prot;
-                    kill = prot.update(player, tool, item);
+                    kill = prot.update(player, tool, item, ev);
                     if (!kill) {
                         return false;
                     }
@@ -180,7 +184,7 @@ public class ProtectionEvents implements ITickHandler {
                     EntityPlayer pl = (EntityPlayer) e;
                     if (pl.isUsingItem()) {
                         //Resident r = MyTownDatasource.instance.getOrMakeResident(pl);
-                        if (!ProtectionEvents.instance.itemUsed(pl)) {
+                        if (!ProtectionEvents.instance.itemUsed(pl, null)) {
                             pl.stopUsingItem();
                             // force update/sync of held item?
                             if (pl instanceof EntityPlayerMP)

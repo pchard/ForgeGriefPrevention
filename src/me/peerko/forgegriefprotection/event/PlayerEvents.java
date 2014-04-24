@@ -3,6 +3,8 @@
  */
 package me.peerko.forgegriefprotection.event;
 
+import java.util.ArrayList;
+
 import me.peerko.forgegriefprotection.ProtBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.EventPriority;
@@ -12,6 +14,9 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import cpw.mods.fml.common.IPlayerTracker;
 
 public class PlayerEvents implements IPlayerTracker {
+    
+    public static ArrayList<ProtBase> toolProtections = new ArrayList<ProtBase>();
+    
     @ForgeSubscribe(priority = EventPriority.HIGHEST)
     public void interact(PlayerInteractEvent ev) {
         if (ev.isCanceled()) {
@@ -32,7 +37,7 @@ public class PlayerEvents implements IPlayerTracker {
             r.pay.cancelPayment();
         }*/
 
-        if (!ProtectionEvents.instance.itemUsed(player)) {
+        if (!ProtectionEvents.instance.itemUsed(player,ev)) {
             ev.setCanceled(true);
             player.stopUsingItem();
             return;

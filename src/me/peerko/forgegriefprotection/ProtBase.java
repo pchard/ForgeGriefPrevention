@@ -50,9 +50,10 @@ public abstract class ProtBase {
     }
 
     /**
+     * @param ev 
      * @return true if allowed
      */
-    public boolean update(EntityPlayer r, Item tool, ItemStack item)
+    public boolean update(EntityPlayer r, Item tool, ItemStack item, net.minecraftforge.event.entity.player.PlayerInteractEvent ev)
 	    throws Exception {
 	throw new Exception("Protection doesn't support Players");
     }

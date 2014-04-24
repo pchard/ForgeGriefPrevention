@@ -6,8 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -106,7 +104,6 @@ public class TinkererConstruct extends ProtBase {
 
     @Override
     public boolean isEntityInstance(Item item) {
-	Logger.getLogger("Minecraft").log(Level.INFO, "test: " + clExcavator.isInstance(item));
 	return clExcavator.isInstance(item) || clHammer.isInstance(item);
     }
 

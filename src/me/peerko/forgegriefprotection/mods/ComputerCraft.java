@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import com.mysql.jdbc.Util;
 
+import me.peerko.forgegriefprotection.DefaultFakePlayer;
 import me.peerko.forgegriefprotection.ProtBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,47 +26,45 @@ import net.minecraftforge.common.ForgeDirection;
 public class ComputerCraft extends ProtBase {
     public static ComputerCraft instance = new ComputerCraft();
 
-    Class<?> clTurtle = null, clTurtlePlayer, clState, clTurtleCommand;
-    Method mTerminate, mIsOn, mGetPlayer,mGetDir;
-    Field fMoved, fClientState, fState, fCommandQueue, fCommandType, fDig, fDigUp, fDigDown;
+    Class<?> clTurtle = null, clTurtlePlayer, clBrain, clTurtleCommand, clTurtleCommandEntry, clTurtleDigCommand;
+    Method mGetDir, mMoved;
+    Field fBrain, fCommandQueue, fCommand;
 
-    public HashMap<Object, Object> turtles = new HashMap<Object, Object>();
-    public HashMap<Object, Integer> states = new HashMap<Object, Integer>();
+    public HashMap<Object, Long> turtles = new HashMap<Object, Long>();
+    //public HashMap<Object, Integer> states = new HashMap<Object, Integer>();
     public HashMap<ChunkCoordinates, Long> anti_spam = new HashMap<ChunkCoordinates, Long>();
     public int anti_spam_counter = 0;
 
     @Override
     public void reload() {
 	anti_spam_counter = 0;
-	turtles = new HashMap<Object, Object>();
+	turtles = new HashMap<Object, Long>();
 	anti_spam = new HashMap<ChunkCoordinates, Long>();
-	states = new HashMap<Object, Integer>();
+	//states = new HashMap<Object, Integer>();
     }
 
     @Override
     public void load() throws Exception {
-	clTurtle = Class.forName("dan200.turtle.shared.TileEntityTurtle");
-	mTerminate = clTurtle.getDeclaredMethod("terminate");
-	mIsOn = clTurtle.getDeclaredMethod("isOn");
-	fMoved = clTurtle.getDeclaredField("m_moved");
-	fState = clTurtle.getDeclaredField("m_state");
-	fState.setAccessible(true);
-	fClientState = clTurtle.getDeclaredField("m_clientState");
-	fClientState.setAccessible(true);
-	clTurtlePlayer = Class.forName("dan200.turtle.shared.TurtlePlayer");
-	mGetPlayer = clTurtlePlayer.getDeclaredMethod("getPlayer", World.class);
-	mGetDir = clTurtle.getDeclaredMethod("getFacingDir");
+	clTurtle = Class.forName("dan200.computercraft.shared.turtle.blocks.TileTurtle");
+	mMoved = clTurtle.getMethod("hasMoved");
+	fBrain = clTurtle.getDeclaredField("m_brain");
+	fBrain.setAccessible(true);
+	//fClientState = clTurtle.getDeclaredField("m_clientState");
+	//fClientState.setAccessible(true);
+	
+	clTurtlePlayer = Class.forName("dan200.computercraft.shared.turtle.core.TurtlePlayer");
 
-	clState = Class.forName("dan200.turtle.shared.TileEntityTurtle$State");
-	fCommandQueue = clState.getDeclaredField("commandQueue");
+
+	clBrain = Class.forName("dan200.computercraft.shared.turtle.core.TurtleBrain");
+	mGetDir = clBrain.getDeclaredMethod("getDirection");
+	fCommandQueue = clBrain.getDeclaredField("m_commandQueue");
 	fCommandQueue.setAccessible(true);
-
-	clTurtleCommand = Class.forName("dan200.turtle.shared.TurtleCommand");
-	fCommandType = clTurtleCommand.getDeclaredField("type");
-	fDig = clTurtleCommand.getDeclaredField("Dig");
-	fDigUp = clTurtleCommand.getDeclaredField("DigUp");
-	fDigDown = clTurtleCommand.getDeclaredField("DigDown");
-	fCommandType.setAccessible(true);
+	
+	clTurtleCommandEntry = Class.forName("dan200.computercraft.shared.turtle.core.TurtleCommandQueueEntry");
+	fCommand = clTurtleCommandEntry.getDeclaredField("command");
+	
+	
+	clTurtleDigCommand = Class.forName("dan200.computercraft.shared.turtle.core.TurtleDigCommand");
     }
 
     @Override
@@ -82,33 +81,45 @@ public class ComputerCraft extends ProtBase {
     public boolean update(TileEntity e) throws Exception {
 	//cleanAntiSpam();
 
-	Object state = fState.get(e);
-	Object clientState = fClientState.get(e);
-	Object prev_turtle = turtles.get(clientState);
+	Object state = fBrain.get(e);
+	//Object clientState = fClientState.get(e);
+	long lastTime;
+	if(turtles.containsKey(state))
+	    lastTime = turtles.get(state);
+	else lastTime = 0;
 
 
-	if (!(Boolean) mIsOn.invoke(e)) {
-	    return true;
-	}
+
 
 	Object commandList = fCommandQueue.get(state);
-	Object command = ((LinkedList<?>)commandList).peek();
+	
+	if (((LinkedList)commandList).isEmpty() || lastTime == e.worldObj.getTotalWorldTime()) {
+	    return true;
+	}
+	
+	Object command = fCommand.get(((LinkedList<?>)commandList).peek());
 	
 	boolean allowed = true;
 	
 	int dim = e.worldObj.provider.dimensionId;
-	int dir = (Integer) mGetDir.invoke(e);
+	
+	int dir = (Integer)mGetDir.invoke(state);
+	
+	
 	
 	//Check if the command the turtle is about to execute has changed... if so
 	// react accordingly
+	
+	
+	
 	if(command != null) {
-
-	    int commandType = (Integer)fCommandType.get(command);
-	    Integer amt = states.get(e);
-	    if(amt == null || amt != commandType) {
-		states.put(e, commandType);
+	    if(clTurtleDigCommand.isInstance(command)) {
 		
-		if(commandType == fDig.getInt(command)) {
+		ForgeDirection forgeDir = ForgeDirection.getOrientation(dir);
+		
+		allowed = canRoam(dim, e.xCoord + forgeDir.offsetX, e.yCoord + forgeDir.offsetY, e.zCoord + forgeDir.offsetZ);
+		
+		/*if(commandType == fDig.getInt(command)) {
 		    allowed = canRoam(dim, e.xCoord + Facing.offsetsXForSide[dir], e.yCoord + Facing.offsetsYForSide[dir], e.zCoord + Facing.offsetsZForSide[dir]);
 		}
 		else if(commandType == fDigUp.getInt(command)) {
@@ -116,22 +127,21 @@ public class ComputerCraft extends ProtBase {
 		}
 		else if(commandType == fDigDown.getInt(command)) {
 		    allowed = canRoam(dim, e.xCoord, e.yCoord - 1, e.zCoord);
-		}
+		}*/
 		//Logger.getLogger("Minecraft").log(Level.INFO, "command: " + commandType);
 	    }
 	}
 
+	turtles.put(state, e.worldObj.getTotalWorldTime());
 	
 	if(allowed)
 	    return true;
 	
 	((LinkedList<?>)commandList).clear();
 	fCommandQueue.set(state, commandList);
-
-	turtles.put(clientState, e);
-
-	turtles.put(clientState, null);
-	mTerminate.invoke(e);
+	
+	//turtles.put(state, null);
+	
 	return true;
     }
 
@@ -166,8 +176,8 @@ public class ComputerCraft extends ProtBase {
 	    if (w.worldInfo.getDimension() == dim)
 		break;
 	}
-	EntityPlayer turtlePlayer = (EntityPlayer) mGetPlayer.invoke(null, w);
-	return canBuild(turtlePlayer, x, y, z);
+	//EntityPlayer turtlePlayer = (EntityPlayer) mGetPlayer.invoke(null, w);
+	return canBuild(DefaultFakePlayer.getPlayer(w), x, y, z);
 	/*
         TownBlock b = MyTownDatasource.instance.getPermBlockAtCoord(dim, x, y,
                 y2, z);
