@@ -53,15 +53,16 @@ public class RotaryCraft extends ProtBase {
 	clBeamMachine = Class.forName("Reika.RotaryCraft.Base.TileEntity.TileEntityBeamMachine");
 	clTileEntityBase = Class.forName("Reika.DragonAPI.Base.TileEntityBase");
 	clTileEntityBedrockBreaker = Class.forName("Reika.RotaryCraft.TileEntities.Production.TileEntityBedrockBreaker");
-	clTileEntitySonicShot = Class.forName("Reika.RotaryCraft.TileEntities.TileEntitySonicBorer");
+	clTileEntitySonicShot = Class.forName("Reika.RotaryCraft.TileEntities.World.TileEntitySonicBorer");
 	clEntitySonicShot = Class.forName("Reika.RotaryCraft.Entities.EntitySonicShot");
 	clMachineRegistryEnum = Class.forName("Reika.RotaryCraft.Registry.MachineRegistry");
-	clTileEntityPileDriver = Class.forName("Reika.RotaryCraft.TileEntities.TileEntityPileDriver");
+	clTileEntityPileDriver = Class.forName("Reika.RotaryCraft.TileEntities.World.TileEntityPileDriver");
 	//clTileEntityAimedCannon = Class.forName("Reika.RotaryCraft.Base.TileEntity.TileEntityAimedCannon");
 	//clTileEntityLaserGun = Class.forName("Reika.RotaryCraft.TileEntities.Weaponry.TileEntityLaserGun");
 	//clRotaryCraftTileEntity = Class.forName("Reika.RotaryCraft.Base.TileEntity.RotaryCraftTileEntity");
 
 	fStep = clBorer.getDeclaredField("step");
+	System.out.println("step: " + fStep);
 	fStep.setAccessible(true);
 	fCutShape = clBorer.getDeclaredField("cutShape");
 	fCutShape.setAccessible(true);
@@ -120,7 +121,7 @@ public class RotaryCraft extends ProtBase {
 
     @Override
     public boolean loaded() {
-	return clBorer != null;
+	return clTileEntityPileDriver != null;
     }
 
     @Override
@@ -139,7 +140,6 @@ public class RotaryCraft extends ProtBase {
 	Class<?> clazz = e.getClass();
 
 	if(clazz == clBorer) {
-
 	    if(!map.containsKey(e) || fStep.getInt(e) != map.get(e)) {
 
 

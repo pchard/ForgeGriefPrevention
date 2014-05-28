@@ -60,10 +60,10 @@ public class ProtectionEvents implements ITickHandler {
                 RailCraft.instance, TrainCraft.instance, Mekanism.instance,
                 */ }));
         ProtectionEvents.tileProtections.addAll(Arrays.asList(new ProtBase[] {
-                BuildCraft.instance, ComputerCraft.instance, ExtraUtilities.instance, RotaryCraft.instance //RedPower.instance,
+                /*BuildCraft.instance,*/ ComputerCraft.instance, ExtraUtilities.instance, RotaryCraft.instance //RedPower.instance,
                 /*ThaumCraft.instance*/ }));
         ProtectionEvents.toolProtections.addAll(Arrays.asList(new ProtBase[] {
-                BuildCraft.instance, ComputerCraft.instance, TinkererConstruct.instance,//RedPower.instance, ArsMagica.instance, 
+                /*BuildCraft.instance,*/ ComputerCraft.instance, TinkererConstruct.instance,//RedPower.instance, ArsMagica.instance, 
                 /*ThaumCraft.instance, ThaumicTinkerer.instance*/ }));
     }
 

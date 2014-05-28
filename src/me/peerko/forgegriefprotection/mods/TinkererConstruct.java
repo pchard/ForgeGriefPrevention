@@ -61,7 +61,7 @@ public class TinkererConstruct extends ProtBase {
 	    
 	    Object matArray;
 	    try {
-		if(clExcavator.isInstance(item))
+		if(clExcavator.isInstance(tool))
 		    matArray = mExcavatorMats.invoke(tool);
 		else //(clHammer.isInstance(item))
 		    matArray = mHammerMats.invoke(tool);
