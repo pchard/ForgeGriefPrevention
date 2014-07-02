@@ -18,6 +18,7 @@ import me.peerko.forgegriefprotection.mods.IndustrialCraft;
 import me.peerko.forgegriefprotection.mods.ModularPowersuits;
 import me.peerko.forgegriefprotection.mods.PortalGun;
 import me.peerko.forgegriefprotection.mods.RotaryCraft;
+import me.peerko.forgegriefprotection.mods.ThermalExpansion;
 import me.peerko.forgegriefprotection.mods.TinkererConstruct;
 //import me.peerko.forgegriefprotection.mods.ThaumCraft;
 //import me.peerko.forgegriefprotection.mods.ThaumicTinkerer;
@@ -55,7 +56,7 @@ public class ProtectionEvents implements ITickHandler {
         ProtectionEvents.entityProtections.addAll(Arrays.asList(new ProtBase[] {
                 //Creeper.instance, Mobs.instance, TNT.instance,
                 //ThaumCraft.instance, PortalGun.instance,
-                IndustrialCraft.instance, ModularPowersuits.instance, RotaryCraft.instance
+                IndustrialCraft.instance, ModularPowersuits.instance, RotaryCraft.instance, ThermalExpansion.instance
                 /*, ArsMagica.instance, SteveCarts.instance,
                 RailCraft.instance, TrainCraft.instance, Mekanism.instance,
                 */ }));
